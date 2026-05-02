@@ -11,7 +11,7 @@
   <!-- Splash / Intro Screen -->
   <div id="splash-screen" style="position: fixed; inset: 0; background: var(--color-bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: var(--space-md);">
     <div style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin-bottom: 40px;">
-      <img src="grafiky/Logo Prototýpci bílé2.png" alt="Prototýpci" style="width: 200px; height: auto;">
+      <img src="grafiky/Logo-Prototypci_white2.png" alt="Prototýpci" style="width: 200px; height: auto;">
       <img src="grafiky/mf-logo-main.svg" alt="Maker Faire" style="width: 200px; height: auto;">
     </div>
     <p class="animate-pulse" style="color: var(--color-text-dim); font-family: 'Outfit'; letter-spacing: 4px; text-transform: uppercase; font-size: 1rem; font-weight: 600;">Uvádějí...</p>
@@ -21,8 +21,10 @@
     <!-- Header -->
     <header class="animate-fade-in" style="margin-bottom: var(--space-lg);">
       <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px;">
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <h2 style="background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.6rem; letter-spacing: 1px; margin: 0; white-space: nowrap;">MAKER QUEST</h2>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <h2 style="background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem; letter-spacing: 1px; margin: 0; white-space: nowrap;">MAKER QUEST</h2>
+          <img src="grafiky/Logo-Prototypci_white2.png" alt="Prototýpci" style="height: 20px; width: auto;">
+          <img src="grafiky/mf-logo-main.svg" alt="Maker Faire" style="height: 20px; width: auto;">
         </div>
         <div class="user-status glass-card" style="padding: 4px 10px; margin: 0; border-radius: 20px; border-color: var(--color-secondary); flex-shrink: 0;">
           <span style="font-size: 0.6rem; font-weight: 800; color: var(--color-secondary);">LVL 1</span>
@@ -65,10 +67,19 @@
     </main>
 
     <!-- Footer / Navigation (Hidden initially) -->
-    <nav class="glass-card" id="main-nav" style="position: fixed; bottom: 10px; left: 10px; right: 10px; display: none; justify-content: space-around; padding: 12px; margin-bottom: 0;">
-      <button class="nav-item">Quest</button>
-      <button class="nav-item">Skills</button>
-      <button class="nav-item">Inventář</button>
+    <nav class="glass-card" id="main-nav" style="position: fixed; bottom: 10px; left: 10px; right: 10px; display: none; justify-content: space-around; padding: 12px; margin-bottom: 0; z-index: 50;">
+      <button class="btn nav-item" data-view="quest" style="padding: 5px; font-size: 0.7rem; flex-direction: column; background: transparent; border: none; box-shadow: none;">
+        <span>🗺️</span>
+        Quest
+      </button>
+      <button class="btn nav-item" data-view="skills" style="padding: 5px; font-size: 0.7rem; flex-direction: column; background: transparent; border: none; box-shadow: none;">
+        <span>📊</span>
+        Skills
+      </button>
+      <button class="btn nav-item" data-view="workbench" style="padding: 5px; font-size: 0.7rem; flex-direction: column; background: transparent; border: none; box-shadow: none;">
+        <span>🛠️</span>
+        Ponk
+      </button>
     </nav>
   </div>
 

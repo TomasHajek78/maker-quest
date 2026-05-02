@@ -22,11 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Splash Screen Logic
   const splash = document.getElementById('splash-screen');
   if (splash) {
-    // If we have saved state, make splash shorter or skip it
-    const saved = localStorage.getItem('makerQuestState');
-    if (saved) {
-      splash.style.animationDelay = '1s';
-    }
+    // Vždy ukázat úvod na dostatečně dlouhou dobu
+    splash.style.animationDelay = '2.5s';
     splash.classList.add('fade-out');
   }
 
@@ -35,12 +32,31 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setupEventListeners() {
-  ageButtons.forEach(btn => {
+  // Age Selection
+  document.querySelectorAll('.btn-age').forEach(btn => {
     btn.addEventListener('click', () => {
       const age = btn.getAttribute('data-age');
       selectAgeGroup(age);
     });
   });
+
+  // Navigation
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const view = btn.getAttribute('data-view');
+      switchView(view);
+    });
+  });
+}
+
+function switchView(view) {
+  mainContent.style.opacity = '0';
+  setTimeout(() => {
+    if (view === 'quest') renderDashboard();
+    if (view === 'skills') renderSkillsView();
+    if (view === 'workbench') renderWorkbench();
+    mainContent.style.opacity = '1';
+  }, 300);
 }
 
 function selectAgeGroup(age) {
@@ -57,77 +73,99 @@ function selectAgeGroup(age) {
 }
 
 function renderDashboard() {
+  const m1Done = state.missionsCompleted.includes(1);
+  const m2Done = state.missionsCompleted.includes(2);
+
   mainContent.innerHTML = `
     <div class="dashboard animate-fade-in">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md);">
-        <h2>Tvé Mise: ${state.ageGroup} let</h2>
+        <h2>Tvé Mise</h2>
       </div>
       
-      <!-- Skill Radar Preview (The WOW Factor) -->
-      <div class="glass-card" style="padding: var(--space-sm); margin-bottom: var(--space-lg); background: var(--grad-surface);">
+      <!-- Skill Radar Preview -->
+      <div class="glass-card nav-item" data-view="skills" style="padding: var(--space-sm); margin-bottom: var(--space-lg); background: var(--grad-surface); cursor: pointer;">
         <div style="display: flex; gap: var(--space-sm); align-items: center;">
-          <div id="radar-container" style="width: 100px; height: 100px;">
-            ${renderSkillRadar(100)}
+          <div id="radar-container" style="width: 80px; height: 80px;">
+            ${renderSkillRadar(80)}
           </div>
           <div>
             <h4 style="color: var(--color-secondary); margin-bottom: 2px;">Tvůj Skill Radar</h4>
-            <p style="font-size: 0.75rem; color: var(--color-text-dim);">Tvé dovednosti rostou s každou splněnou misí!</p>
+            <p style="font-size: 0.7rem; color: var(--color-text-dim);">Dovednosti: ${Math.floor(Object.values(state.skills).reduce((a,b)=>a+b,0)/5)}%</p>
           </div>
         </div>
       </div>
 
-      <div class="glass-card mission-card" id="mission-1-card" style="border-left: 4px solid var(--color-primary);">
+      <!-- Mission 1 -->
+      <div class="glass-card mission-card ${m1Done ? 'completed' : ''}" style="border-left: 4px solid ${m1Done ? 'var(--color-success)' : 'var(--color-primary)'}; margin-bottom: 15px; opacity: ${m1Done ? 0.8 : 1};">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
           <div>
-            <span style="font-size: 0.7rem; color: var(--color-primary); font-weight: 700; text-transform: uppercase;">Mise 1: Zahřívačka</span>
+            <span style="font-size: 0.7rem; color: ${m1Done ? 'var(--color-success)' : 'var(--color-primary)'}; font-weight: 700; text-transform: uppercase;">Mise 1: Zahřívačka</span>
             <h3>První dojmy</h3>
           </div>
-          <span style="font-size: 1.2rem;">🚀</span>
+          <span style="font-size: 1.2rem;">${m1Done ? '✅' : '🚀'}</span>
         </div>
-        <p style="font-size: 0.9rem; color: var(--color-text-dim); margin-bottom: var(--space-sm);">
-          ${state.ageGroup === '5-7' ? 'Najdi 3 věci, které mají tvoji oblíbenou barvu.' : 'Najdi 3 nejzajímavější vynálezy na festivalu.'}
-        </p>
-        <button class="btn btn-primary" style="width: 100%;" onclick="startMission1()">ZAČÍT MISI</button>
+        ${m1Done ? '<p style="font-size: 0.8rem; color: var(--color-success);">SPLOUNĚNO! Získal jsi základnu robota.</p>' : `
+          <p style="font-size: 0.9rem; color: var(--color-text-dim); margin-bottom: var(--space-sm);">
+            ${state.ageGroup === '5-7' ? 'Najdi 3 věci, které mají tvoji oblíbenou barvu.' : 'Najdi 3 nejzajímavější vynálezy na festivalu.'}
+          </p>
+          <button class="btn btn-primary" style="width: 100%;" onclick="startMission1()">ZAČÍT MISI</button>
+        `}
       </div>
 
-      <div class="glass-card mission-card locked" style="opacity: 0.5; filter: grayscale(1); margin-top: var(--space-sm);">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <!-- Mission 2 -->
+      <div class="glass-card mission-card ${!m1Done ? 'locked' : ''} ${m2Done ? 'completed' : ''}" style="border-left: 4px solid ${!m1Done ? 'var(--color-text-dim)' : (m2Done ? 'var(--color-success)' : 'var(--color-secondary)')}; opacity: ${!m1Done ? 0.5 : 1};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
           <div>
-            <span style="font-size: 0.7rem; color: var(--color-text-dim); font-weight: 700; text-transform: uppercase;">Mise 2: Pozoruj & hodnoť</span>
+            <span style="font-size: 0.7rem; color: var(--color-text-dim); font-weight: 700; text-transform: uppercase;">Mise 2: Průzkumník</span>
             <h3>Hledání unikátů</h3>
           </div>
-          <span style="font-size: 1.2rem;">🔒</span>
+          <span style="font-size: 1.2rem;">${!m1Done ? '🔒' : (m2Done ? '✅' : '🔍')}</span>
         </div>
+        ${!m1Done ? '<p style="font-size: 0.8rem;">Dokonči Misi 1 pro odemčení.</p>' : (m2Done ? '<p style="font-size: 0.8rem; color: var(--color-success);">SPLNĚNO! Máš senzor pozornosti.</p>' : `
+          <p style="font-size: 0.9rem; color: var(--color-text-dim); margin-bottom: var(--space-sm);">Najdi ten nejbláznivější vynález a popiš, k čemu slouží.</p>
+          <button class="btn btn-secondary" style="width: 100%;" onclick="startMission2()">POKRAČOVAT</button>
+        `)}
       </div>
     </div>
   `;
 }
 
-function startMission1() {
+function startMission2() {
   mainContent.innerHTML = `
     <div class="mission-view animate-fade-in">
       <button class="btn btn-outline" style="margin-bottom: var(--space-md); padding: 5px 10px; font-size: 0.8rem;" onclick="renderDashboard()">← Zpět</button>
-      <h2 style="margin-bottom: var(--space-sm);">Mise 1: První dojmy</h2>
-      <p style="color: var(--color-text-dim); margin-bottom: var(--space-lg);">Vyfoť 3 věci, které tě dnes nejvíc "praštily do očí".</p>
+      <h2 style="margin-bottom: var(--space-sm);">Mise 2: Průzkumník</h2>
+      <p style="color: var(--color-text-dim); margin-bottom: var(--space-lg);">Najdi věc, u které vůbec nechápeš, jak funguje. Vyfoť ji a napiš nám svůj odhad!</p>
       
-      <div class="photo-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: var(--space-lg);">
-        ${[1, 2, 3].map(i => `
-          <div class="glass-card photo-slot" style="aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-style: dashed; position: relative;">
-            <span style="font-size: 1.5rem;">📸</span>
-            <input type="file" accept="image/*" capture="environment" style="position: absolute; inset: 0; opacity: 0; cursor: pointer;" onchange="handlePhotoUpload(${i}, this)">
-          </div>
-        `).join('')}
+      <div class="glass-card photo-slot" style="aspect-ratio: 16/9; margin-bottom: var(--space-md); display: flex; align-items: center; justify-content: center; border-style: dashed; position: relative;">
+        <span style="font-size: 2rem;">📸</span>
+        <input type="file" accept="image/*" capture="environment" style="position: absolute; inset: 0; opacity: 0; cursor: pointer;" onchange="this.parentElement.innerHTML='✅'">
       </div>
 
-      <div id="mission-progress" style="margin-top: var(--space-md);">
-        <p style="font-size: 0.8rem; margin-bottom: 5px;">Postup mise: <span id="photo-count">0</span> / 3</p>
-        <div style="width: 100%; height: 8px; background: var(--color-bg-alt); border-radius: 4px; overflow: hidden;">
-          <div id="progress-bar" style="width: 0%; height: 100%; background: var(--grad-main); transition: width 0.3s ease;"></div>
-        </div>
-      </div>
+      <textarea id="mission-2-desc" class="glass-card" style="width: 100%; min-height: 100px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 10px; margin-bottom: var(--space-md);" placeholder="K čemu ta věc asi slouží?"></textarea>
+
+      <button class="btn btn-primary" style="width: 100%;" onclick="completeMission2()">ODESLAT ODPOVĚĎ</button>
     </div>
   `;
 }
+
+window.completeMission2 = function() {
+  const desc = document.getElementById('mission-2-desc').value;
+  if (desc.length < 5) {
+    alert('Zkus nám o tom napsat aspoň jednu větu!');
+    return;
+  }
+  
+  state.skills.technical += 20;
+  state.skills.creativity += 10;
+  state.missionsCompleted.push(2);
+  state.inventory.push('sensor_module');
+  state.currentLevel = 3;
+  saveState();
+  
+  alert('Skvělé! Získal jsi Senzor pozornosti do svého Ponku.');
+  renderDashboard();
+};
 
 window.handlePhotoUpload = function(index, input) {
   if (input.files && input.files[0]) {
@@ -156,8 +194,9 @@ function updateMissionProgress() {
   
   if (photosTaken === 3) {
     setTimeout(() => {
-      alert('Skvělá práce! První mise splněna. Tvé dovednosti vzrostly!');
+      alert('Skvělá práce! První mise splněna. Tvé dovednosti vzrostly a získal jsi první součástku do Ponku!');
       state.missionsCompleted.push(1);
+      state.inventory.push('base_module');
       state.currentLevel = 2;
       saveState();
       renderDashboard();

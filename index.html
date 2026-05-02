@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Maker Quest | Cesta Prototýpka</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0f172a">
+</head>
+<body>
+  <!-- Splash / Intro Screen -->
+  <div id="splash-screen" style="position: fixed; inset: 0; background: var(--color-bg); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: var(--space-md);">
+    <div style="display: flex; flex-direction: column; gap: 30px; align-items: center; margin-bottom: 40px;">
+      <img src="grafiky/Logo Prototýpci bílé2.png" alt="Prototýpci" style="width: 200px; height: auto;">
+      <img src="grafiky/mf-logo-main.svg" alt="Maker Faire" style="width: 200px; height: auto;">
+    </div>
+    <p class="animate-pulse" style="color: var(--color-text-dim); font-family: 'Outfit'; letter-spacing: 4px; text-transform: uppercase; font-size: 1rem; font-weight: 600;">Uvádějí...</p>
+  </div>
+
+  <div class="app-container" id="app">
+    <!-- Header -->
+    <header class="animate-fade-in" style="margin-bottom: var(--space-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <h2 style="background: var(--grad-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.6rem; letter-spacing: 1px; margin: 0; white-space: nowrap;">MAKER QUEST</h2>
+        </div>
+        <div class="user-status glass-card" style="padding: 4px 10px; margin: 0; border-radius: 20px; border-color: var(--color-secondary); flex-shrink: 0;">
+          <span style="font-size: 0.6rem; font-weight: 800; color: var(--color-secondary);">LVL 1</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content (Dynamic) -->
+    <main id="main-content" class="animate-fade-in">
+      <div class="welcome-section" style="margin-bottom: var(--space-lg);">
+        <h1 style="font-size: 1.25rem; margin-bottom: var(--space-xs);">Ahoj, Prototýpku!</h1>
+        <p style="color: var(--color-text-dim);">Vítej na Maker Faire. Než začneme tvou misi, řekni nám, kolik ti je let?</p>
+      </div>
+
+      <div class="age-selector">
+        <button class="glass-card btn-age" data-age="5-7" style="width: 100%; text-align: left; display: flex; align-items: center; gap: var(--space-md);">
+          <div class="icon" style="font-size: 2rem;">🚀</div>
+          <div>
+            <h3 style="margin-bottom: 2px; color: #ffffff;">5 - 7 let</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-dim);">Průzkumníci – Objevuj svět makerů</p>
+          </div>
+        </button>
+
+        <button class="glass-card btn-age" data-age="8-11" style="width: 100%; text-align: left; display: flex; align-items: center; gap: var(--space-md);">
+          <div class="icon" style="font-size: 2rem;">🛠️</div>
+          <div>
+            <h3 style="margin-bottom: 2px; color: #ffffff;">8 - 11 let</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-dim);">Tvůrci – Vyřeš kreativní výzvy</p>
+          </div>
+        </button>
+
+        <button class="glass-card btn-age" data-age="12+" style="width: 100%; text-align: left; display: flex; align-items: center; gap: var(--space-md);">
+          <div class="icon" style="font-size: 2rem;">💡</div>
+          <div>
+            <h3 style="margin-bottom: 2px; color: #ffffff;">12+ let</h3>
+            <p style="font-size: 0.8rem; color: var(--color-text-dim);">Inovátoři – Navrhni svůj projekt</p>
+          </div>
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer / Navigation (Hidden initially) -->
+    <nav class="glass-card" id="main-nav" style="position: fixed; bottom: 10px; left: 10px; right: 10px; display: none; justify-content: space-around; padding: 12px; margin-bottom: 0;">
+      <button class="nav-item">Quest</button>
+      <button class="nav-item">Skills</button>
+      <button class="nav-item">Inventář</button>
+    </nav>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
